@@ -1,0 +1,49 @@
+# main（本番）が更新されたら、チェックしてから GitHub Pages に自動で公開する
+name: ホームページを公開
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # 手動で公開し直したいとき用
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: チェックと準備
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 公開前チェック（リンク・画像の抜けがないか）
+        run: python3 .github/scripts/check_site.py .
+
+      - name: 公開するファイルだけをまとめる
+        run: |
+          mkdir _site
+          cp *.html sitemap.xml _site/
+          cp -r css js images video _site/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: 公開
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
