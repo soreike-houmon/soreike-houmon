@@ -1353,3 +1353,155 @@ address {
 .thanks-actions {
   margin-top: var(--space-32);
 }
+
+/* =========================================================
+   コラム（column / column-douisho）※DESIGN.md 7章「パンくずリスト」「コラムの記事ページ」
+   ========================================================= */
+
+/* ---------- パンくずリスト ---------- */
+.breadcrumb {
+  margin-bottom: var(--space-16);
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: var(--color-text-sub);
+}
+
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.breadcrumb li + li::before {
+  content: "＞";
+  margin: 0 var(--space-8);
+  color: var(--color-text-sub);
+}
+
+/* ---------- コラム一覧 ---------- */
+.column-list {
+  border-top: 1px solid var(--color-line);
+}
+
+.column-list li a {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-24) 0;
+  border-bottom: 1px solid var(--color-line);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.column-list-title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--color-main-dark);
+}
+
+.column-list li a:hover .column-list-title {
+  color: var(--color-main);
+  text-decoration: underline;
+}
+
+/* ---------- 記事ページ ---------- */
+.article-meta {
+  margin-top: var(--space-16);
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: var(--color-text-sub);
+}
+
+.article-body > h2.section-title {
+  margin-top: var(--space-48);
+}
+
+.article-body > h3 {
+  margin: var(--space-32) 0 var(--space-16);
+  font-size: var(--fs-h3);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--color-main-dark);
+}
+
+.article-body > ul,
+.article-body > ol {
+  margin: 0 0 var(--space-16);
+}
+
+.article-body > ul li {
+  position: relative;
+  padding-left: var(--space-24);
+}
+
+.article-body > ul li::before {
+  content: "";
+  position: absolute;
+  left: var(--space-4);
+  top: 0.75em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-main);
+}
+
+.article-body > ol {
+  padding-left: var(--space-24);
+}
+
+.article-body li + li {
+  margin-top: var(--space-8);
+}
+
+.compare-grid {
+  display: grid;
+  gap: var(--card-gap);
+  margin-bottom: var(--space-16);
+}
+
+.compare-list {
+  margin: 0;
+}
+
+.compare-list dt {
+  font-weight: 700;
+  color: var(--color-main-dark);
+}
+
+.compare-list dd {
+  margin: 0 0 var(--space-16);
+}
+
+.compare-list dd:last-child {
+  margin-bottom: 0;
+}
+
+.article-notes {
+  margin-top: var(--space-48);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--color-line);
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: var(--color-text-sub);
+}
+
+.article-notes p {
+  margin-bottom: var(--space-8);
+}
+
+@media (min-width: 768px) {
+  .column-list li a {
+    padding: var(--space-32) 0;
+  }
+  .compare-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
