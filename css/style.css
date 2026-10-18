@@ -430,7 +430,11 @@ address {
 
 .hero-inner {
   display: grid;
-  gap: var(--space-48);
+  gap: var(--space-24);
+}
+
+.hero-points {
+  margin-top: var(--space-24);
 }
 
 .hero-note {
@@ -495,14 +499,37 @@ address {
   color: var(--color-text-sub);
 }
 
+/* イラスト（DESIGN.md 7章：イラスト） */
+.hero-visual img {
+  width: 100%;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+}
+
+.hero-head .hero-title {
+  margin-bottom: 0;
+}
+
 @media (min-width: 768px) {
   .hero {
-    padding: var(--space-96) 0;
+    padding: var(--space-64) 0 var(--space-96);
   }
   .hero-inner {
-    grid-template-columns: 1fr 320px;
-    align-items: center;
-    gap: var(--space-64);
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "head   visual"
+      "body   visual"
+      "points points";
+    gap: var(--space-32) var(--space-48);
+    align-items: start;
+  }
+  .hero-head   { grid-area: head; align-self: end; }
+  .hero-body   { grid-area: body; }
+  .hero-visual { grid-area: visual; align-self: center; }
+  .hero-points {
+    grid-area: points;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: var(--space-16);
   }
 }
 
