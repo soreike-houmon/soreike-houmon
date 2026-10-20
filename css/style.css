@@ -1483,6 +1483,10 @@ address {
   margin-bottom: 0;
 }
 
+.article-body > .faq {
+  margin-bottom: var(--space-24);
+}
+
 .article-notes {
   margin-top: var(--space-48);
   padding-top: var(--space-24);
