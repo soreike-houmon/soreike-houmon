@@ -1564,3 +1564,27 @@ address {
   letter-spacing: 0.02em;
   color: var(--color-text-sub);
 }
+
+/* ---------- 記事内の写真（出典つき） ---------- */
+.article-figure {
+  margin: var(--space-24) 0 var(--space-16);
+}
+
+.article-figure img {
+  display: block;
+  max-width: 100%;
+  max-height: 420px;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+}
+
+.article-figure figcaption {
+  margin-top: var(--space-8);
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: var(--color-text-sub);
+}
