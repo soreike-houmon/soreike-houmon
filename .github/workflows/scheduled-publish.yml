@@ -1,0 +1,60 @@
+# コラム「現場の先生に聞いてみた」を、毎朝決まった時刻に1本ずつ公開する
+# 公開する記事は drafts/staff-shinkyu ブランチの .drafts フォルダに用意してある。
+# その日の公開日になった記事を main に追加し、そのまま「ホームページを公開」を実行する。
+name: コラムの予約公開
+
+on:
+  schedule:
+    - cron: "41 21 * * *" # 毎朝 6:41（日本時間）。GitHub の都合で数分〜十数分遅れることがある
+  workflow_dispatch: # 手動ですぐ実行したいとき用
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: scheduled-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: 今日の記事を公開
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: 予約中の記事を取り出す
+        run: |
+          git fetch origin drafts/staff-shinkyu
+          git checkout origin/drafts/staff-shinkyu -- .drafts
+          git rm -r -q --cached .drafts
+
+      - name: 公開日になった記事を追加する
+        id: add
+        run: |
+          result=$(python3 .drafts/publish.py "$(TZ=Asia/Tokyo date +%F)")
+          rm -rf .drafts
+          echo "result=$result" >> "$GITHUB_OUTPUT"
+          echo "追加した回：$result"
+
+      - name: 公開前チェック
+        if: steps.add.outputs.result != 'NONE'
+        run: python3 .github/scripts/check_site.py .
+
+      - name: main に反映する
+        if: steps.add.outputs.result != 'NONE'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add column-staff-shinkyu-*.html column.html sitemap.xml css/style.css
+          git commit -m "コラム「現場の先生に聞いてみた」第${{ steps.add.outputs.result }}回を予約公開"
+          git push origin main
+
+      - name: ホームページを公開する
+        if: steps.add.outputs.result != 'NONE'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main
