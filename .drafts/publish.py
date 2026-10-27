@@ -10,9 +10,14 @@ if not todo: print("NONE"); sys.exit(0)
 # 見た目（記事内写真のスタイル）がまだなければ反映
 if ".article-figure" not in open("css/style.css", encoding="utf-8").read():
     shutil.copy(".drafts/style.css", "css/style.css")
+# サイトのアドレス（独自ドメインに移っても、sitemap.xml のトップのアドレスに合わせる）
+OLD_BASE = "https://soreike-houmon.github.io/soreike-houmon/"
+_sm = open("sitemap.xml", encoding="utf-8").read()
+BASE = re.search(r"<loc>(https://[^<]+?/)</loc>", _sm).group(1)
 for m in todo:
     n = m["n"]
-    shutil.copy(f".drafts/column-staff-shinkyu-{n}.html", f"column-staff-shinkyu-{n}.html")
+    page = open(f".drafts/column-staff-shinkyu-{n}.html", encoding="utf-8").read().replace(OLD_BASE, BASE)
+    open(f"column-staff-shinkyu-{n}.html", "w", encoding="utf-8").write(page)
     s = open("column.html", encoding="utf-8").read()
     item = f'''      <ul class="column-list">
         <li>
@@ -27,7 +32,7 @@ for m in todo:
     sm = open("sitemap.xml", encoding="utf-8").read()
     prev = max(k for k in range(1, n) if f"column-staff-shinkyu-{k}.html" in sm)
     a = f"column-staff-shinkyu-{prev}.html</loc></url>\n"
-    sm = sm.replace(a, a + f"  <url><loc>https://soreike-houmon.github.io/soreike-houmon/column-staff-shinkyu-{n}.html</loc></url>\n")
+    sm = sm.replace(a, a + f"  <url><loc>{BASE}column-staff-shinkyu-{n}.html</loc></url>\n")
     open("sitemap.xml", "w", encoding="utf-8").write(sm)
 latest = max(m["n"] for m in todo)
 for k in range(1, latest + 1):
