@@ -29,7 +29,7 @@ main ブランチ（本番）が更新されると、GitHub Actions が自動で
 2. チェックに合格したら、サイトのファイルだけをまとめて GitHub Pages に公開する
 3. 問題が見つかった場合は公開せず、今のページをそのまま残す
 
-公開先：https://soreike-houmon.github.io/soreike-houmon/
+公開先：https://www.soreike-houmon.com/
 公開の状況は、リポジトリの「Actions」タブで確認できる（緑のチェック＝成功、赤の×＝失敗）。
 
 ## 更新のしかた
