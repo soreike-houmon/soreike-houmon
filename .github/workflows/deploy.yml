@@ -28,7 +28,7 @@ jobs:
       - name: 公開するファイルだけをまとめる
         run: |
           mkdir _site
-          cp *.html sitemap.xml _site/
+          cp *.html sitemap.xml robots.txt _site/
           cp -r css js images video _site/
 
       - uses: actions/configure-pages@v5
