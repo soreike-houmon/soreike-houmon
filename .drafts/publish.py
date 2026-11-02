@@ -10,6 +10,10 @@ if not todo: print("NONE"); sys.exit(0)
 # 見た目（記事内写真のスタイル）がまだなければ反映
 if ".article-figure" not in open("css/style.css", encoding="utf-8").read():
     shutil.copy(".drafts/style.css", "css/style.css")
+_css = open("css/style.css", encoding="utf-8").read()
+if ".article-illust" not in _css:
+    _src = open(".drafts/style.css", encoding="utf-8").read()
+    open("css/style.css", "w", encoding="utf-8").write(_css.rstrip("\n") + "\n" + _src[_src.index("\n/* 記事内の図解イラスト"):])
 # サイトのアドレス（独自ドメインに移っても、sitemap.xml のトップのアドレスに合わせる）
 OLD_BASE = "https://soreike-houmon.github.io/soreike-houmon/"
 _sm = open("sitemap.xml", encoding="utf-8").read()

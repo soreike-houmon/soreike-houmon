@@ -86,6 +86,9 @@ body {
 
 h1, h2, h3 {
   margin: 0;
+  /* 見出しは言葉の途中で改行しない（「、」「？」や空白のあとで改行。入りきらないときだけ途中で改行） */
+  word-break: keep-all;
+  overflow-wrap: anywhere;
   text-wrap: balance;
   font-family: var(--font-heading);
   font-weight: 700;
@@ -1587,4 +1590,13 @@ address {
   line-height: 1.7;
   letter-spacing: 0.02em;
   color: var(--color-text-sub);
+}
+
+/* 記事内の図解イラスト（当院作成のSVG。DESIGN.md「記事内の図解イラスト」） */
+.article-illust svg {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  height: auto;
+  margin: 0 auto;
 }
