@@ -1591,3 +1591,12 @@ address {
   letter-spacing: 0.02em;
   color: var(--color-text-sub);
 }
+
+/* 記事内の図解イラスト（当院作成のSVG。DESIGN.md「記事内の図解イラスト」） */
+.article-illust svg {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  height: auto;
+  margin: 0 auto;
+}
