@@ -1,15 +1,17 @@
-# 【2026年11月10日 停止中】毎朝の自動実行は止めている（手動の実行だけ残す）。
-# 理由：drafts/staff-shinkyu ブランチの予約記事は古いデザインのまま。11月7日以降の新しいデザインのサイトに入れると表示が崩れる。
-#       また GitHub の自動実行の回数を減らすため。コラムは当面、Mac の _build/build.py（LAST_STAFF）で作り直して PR で公開する。
+# コラムの予約公開（2026年11月10日〜 新しいデザイン用に作り直し）
 #
-# コラム「現場の先生に聞いてみた」を、毎朝決まった時刻に1本ずつ公開する
-# 公開する記事は drafts/staff-shinkyu ブランチの .drafts フォルダに用意してある。
-# その日の公開日になった記事を main に追加し、そのまま「ホームページを公開」を実行する。
+# 毎朝 6:41（日本時間）に、scheduled/site ブランチの .scheduled/<今日の日付>/ を見る。
+# その日の分があれば、サイトの HTML・sitemap.xml・robots.txt・css を丸ごと差し替えて main に反映し、公開する。
+# 予約分は社長の Mac の _build/build_schedule.py でまとめて作る（公開日ごとのサイト全体）。
+#
+# 安全装置：各予約分には EXPECTED（差し替える直前の main の指紋）が入っている。
+# 予約を作ったあとに main が手で変えられていたら（指紋が合わなければ）、上書きせずに失敗で止める。
+# → GitHub からメールが届く。予約分を作り直してから、Actions で手動実行する。
 name: コラムの予約公開
 
 on:
-  # schedule:
-  #   - cron: "41 21 * * *" # 毎朝 6:41（日本時間）。2026年11月10日から停止中
+  schedule:
+    - cron: "41 21 * * *" # 毎朝 6:41（日本時間）
   workflow_dispatch: # 手動ですぐ実行したいとき用
 
 permissions:
@@ -22,43 +24,64 @@ concurrency:
 
 jobs:
   publish:
-    name: 今日の記事を公開
+    name: 今日の分を公開
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0
 
-      - name: 予約中の記事を取り出す
+      - name: 今日の予約分を取り出す
+        id: pick
         run: |
-          git fetch origin drafts/staff-shinkyu
-          git checkout origin/drafts/staff-shinkyu -- .drafts
-          git rm -r -q --cached .drafts
+          today=$(TZ=Asia/Tokyo date +%F)
+          echo "today=$today" >> "$GITHUB_OUTPUT"
+          git fetch --depth 1 origin scheduled/site
+          if git cat-file -e "FETCH_HEAD:.scheduled/$today/index.html" 2>/dev/null; then
+            mkdir -p /tmp/sched
+            git archive FETCH_HEAD ".scheduled/$today" | tar -x -C /tmp/sched
+            echo "found=yes" >> "$GITHUB_OUTPUT"
+            echo "今日（$today）の予約分があります"
+          else
+            echo "found=no" >> "$GITHUB_OUTPUT"
+            echo "今日（$today）の予約分はありません"
+          fi
 
-      - name: 公開日になった記事を追加する
-        id: add
+      - name: main が予約を作ったときのままか確かめる
+        if: steps.pick.outputs.found == 'yes'
         run: |
-          result=$(python3 .drafts/publish.py "$(TZ=Asia/Tokyo date +%F)")
-          rm -rf .drafts
-          echo "result=$result" >> "$GITHUB_OUTPUT"
-          echo "追加した回：$result"
+          dir="/tmp/sched/.scheduled/${{ steps.pick.outputs.today }}"
+          expected=$(tr -d '[:space:]' < "$dir/EXPECTED")
+          actual=$(python3 .github/scripts/site_hash.py .)
+          if [ "$expected" != "$actual" ]; then
+            echo "::error::予約を作ったあとに main が変わっています。上書きせずに止めました。Mac の _build/build_schedule.py で予約分を作り直してください。"
+            exit 1
+          fi
+
+      - name: サイトを差し替える
+        if: steps.pick.outputs.found == 'yes'
+        run: |
+          dir="/tmp/sched/.scheduled/${{ steps.pick.outputs.today }}"
+          rm -f ./*.html
+          cp "$dir"/*.html "$dir/sitemap.xml" "$dir/robots.txt" .
+          cp "$dir/css/style.css" css/style.css
+          echo "NOTE=$(cat "$dir/NOTE" 2>/dev/null || echo 予約公開)" >> "$GITHUB_ENV"
 
       - name: 公開前チェック
-        if: steps.add.outputs.result != 'NONE'
+        if: steps.pick.outputs.found == 'yes'
         run: python3 .github/scripts/check_site.py .
 
       - name: main に反映する
-        if: steps.add.outputs.result != 'NONE'
+        if: steps.pick.outputs.found == 'yes'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add column-staff-shinkyu-*.html column.html sitemap.xml css/style.css
-          git commit -m "コラム「現場の先生に聞いてみた」第${{ steps.add.outputs.result }}回を予約公開"
+          git add -A -- '*.html' sitemap.xml robots.txt css/style.css
+          git commit -m "予約公開（${{ steps.pick.outputs.today }}）：$NOTE"
           git push origin main
 
       - name: ホームページを公開する
-        if: steps.add.outputs.result != 'NONE'
+        if: steps.pick.outputs.found == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run deploy.yml --ref main
