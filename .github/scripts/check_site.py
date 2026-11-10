@@ -3,7 +3,8 @@
 import pathlib, re, sys
 
 root = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ".")
-pattern = re.compile(r'(?:href|src|poster)="([^"]+)"')
+# data-src などは対象外（アクセスカウンターの counter.php は GitHub Pages では動かず、表示もされない）
+pattern = re.compile(r'(?<![-\w])(?:href|src|poster)="([^"]+)"')
 problems = []
 
 pages = sorted(root.glob("*.html"))
@@ -14,7 +15,7 @@ for page in pages:
     for ref in pattern.findall(page.read_text(encoding="utf-8")):
         if ref.startswith(("http://", "https://", "//", "tel:", "mailto:", "#", "data:")):
             continue
-        path = ref.split("#")[0].split("?")[0]
+        path = ref.split("#")[0].split("?")[0].lstrip("/")  # /css/style.css のような書き方（404.html）にも対応
         if path and not (root / path).exists():
             problems.append(f"{page.name}: {ref} が見つかりません")
 

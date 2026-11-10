@@ -13,6 +13,7 @@ recruit.html   採用情報
 news.html      お知らせ
 contact.html   お問い合わせ（Formspree で送信）
 thanks.html    送信完了（メニューには出さない）
+404.html       ページが見つからないとき
 css/style.css  見た目
 js/main.js     メニューの開閉・フォーム送信
 images/        画像
@@ -20,6 +21,13 @@ video/         求人動画
 sitemap.xml    Google 向けのページ一覧
 .github/       自動公開の設定と公開前チェック
 ```
+
+## 経緯（2026年11月）
+
+- 11月7日、GitHub アカウントが一時停止されたため、公開先を Xserver に移した。この間、サイトは Mac の `_build/build.py` で作り直し、デザインも変えた
+- 11月10日、アカウントの停止が解除されたので、公開先を GitHub Pages に戻した。Xserver で公開していた版（11月9日時点）をこのリポジトリに入れた
+- `.htaccess`（Xserver 用の転送設定）と `counter.php`（アクセスカウンター）は GitHub Pages では動かないので入れていない。カウンターは数が読めないときは表示されない作り
+- コラムの予約公開（毎朝の自動実行）は停止中
 
 ## 公開のしかた（自動）
 
