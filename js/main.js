@@ -79,3 +79,32 @@
       });
   });
 })();
+
+// アクセスカウンター（左メニュー「あなたは○○人目のお客様です」）
+// 数は counter.php（サーバー）が数える本物の訪問数だけ。読み込めないときは箱ごと表示しない
+(function () {
+  var box = document.getElementById('hs-counter');
+  var digits = document.getElementById('hs-counter-digits');
+  if (!box || !digits || !window.fetch) return;
+  var src = box.getAttribute('data-src') || 'counter.php';
+  fetch(src, { cache: 'no-store', credentials: 'same-origin' })
+    .then(function (res) {
+      if (!res.ok) throw new Error('counter');
+      return res.json();
+    })
+    .then(function (data) {
+      var n = data && data.count;
+      if (typeof n !== 'number' || !isFinite(n) || n < 0 || Math.floor(n) !== n) return;
+      var s = String(n);
+      while (s.length < 6) s = '0' + s;
+      digits.textContent = '';
+      for (var i = 0; i < s.length; i++) {
+        var d = document.createElement('span');
+        d.className = 'hs-digit';
+        d.textContent = s.charAt(i);
+        digits.appendChild(d);
+      }
+      box.hidden = false;
+    })
+    .catch(function () { /* 表示しない */ });
+})();
