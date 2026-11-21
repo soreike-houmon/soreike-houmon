@@ -1528,3 +1528,128 @@ address {
     display: none !important;
   }
 }
+
+/* =========================================================
+   コラム（記事ページ）は10月風の落ち着いた見た目（2026-11-21 北田さん指示）
+   ヘッダー・ページ最後のメニュー・スマホの固定ボタンはD案のまま
+   ========================================================= */
+body.is-article {
+  background: #FFFFFF;
+}
+.is-article .page-hero {
+  background: #FAF7F2;
+  color: #222222;
+  border-bottom: 1px solid #DDEAF4;
+}
+.is-article .page-hero a {
+  color: #0068B3;
+}
+.is-article .page-hero a:hover {
+  color: #D9480F;
+}
+.is-article .page-hero :focus-visible {
+  outline-color: #E8590C;
+}
+.is-article .page-title {
+  color: #222222;
+}
+.is-article .breadcrumb {
+  color: #444444;
+}
+.is-article .series-label {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  color: #0068B3;
+}
+.is-article .article-meta {
+  color: #444444;
+}
+.is-article .article-meta dt {
+  font-weight: normal;
+}
+/* 小見出し：塗りの帯をやめ、黒い文字＋短い下線 */
+.is-article .article-body .section-title,
+.is-article .series-title {
+  padding: 0;
+  background: none;
+  border-left: 0;
+  border-radius: 0;
+  color: #222222;
+  font-size: 22px;
+}
+.is-article .article-body .section-title {
+  margin: 44px 0 18px;
+}
+.is-article .article-body .section-title::before,
+.is-article .series-title::before {
+  content: none;
+}
+.is-article .article-body .section-title::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 3px;
+  margin-top: 12px;
+  background: #0068B3;
+}
+.is-article .article-h3::before {
+  content: none;
+}
+/* コーナーの説明 */
+.is-article .corner-card {
+  background: #EEF5FB;
+  border: 1px solid #DDEAF4;
+  border-radius: 12px;
+}
+/* 会話：箱に入れず、名前を太字にした普通の文章 */
+.is-article .talk,
+.is-article .talk-kitada {
+  margin: 0 0 1.1em;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+.is-article .talk-name {
+  display: inline;
+  margin: 0;
+  color: #0068B3;
+  font-size: inherit;
+  line-height: inherit;
+}
+.is-article .talk-kitada .talk-name {
+  color: #0068B3;
+}
+.is-article .talk-name::before {
+  content: none;
+}
+.is-article .talk-name::after {
+  content: "：";
+}
+.is-article .talk-body {
+  display: inline;
+}
+.is-article .talk-body p {
+  margin: 0 0 1.1em;
+}
+.is-article .talk-body p:first-child {
+  display: inline;
+}
+.is-article .talk-body p:first-child + p {
+  margin-top: 1.1em;
+}
+.is-article .talk-note {
+  margin: 0 0 1.1em;
+  text-align: left;
+}
+/* 連載の記事一覧の箱 */
+.is-article .series-card {
+  border: 1px solid #DDEAF4;
+  border-radius: 12px;
+}
+.is-article .series-card .series-title {
+  margin: 0 0 8px;
+  padding: 14px 16px 0;
+  font-size: 17px;
+}
