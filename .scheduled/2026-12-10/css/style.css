@@ -512,10 +512,51 @@ address {
     padding: 32px 16px 32px;
   }
   .hero-title {
-    font-size: 24px;
+    font-size: 27px;
   }
   .hero .btn {
     max-width: none;
+  }
+}
+
+/* 写真つきのメインビジュアル（2026-11-21〜 images/hero.jpg。写真の上に文字を重ねるため暗くする） */
+.hero-photo {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 580px;
+  overflow: hidden;
+  background: #10324F;
+}
+.hero-photo .hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 60% 40%;
+}
+.hero-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(8, 36, 60, 0.86) 0%, rgba(8, 36, 60, 0.62) 50%, rgba(8, 36, 60, 0.2) 100%);
+}
+.hero-photo .hero-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+@media (max-width: 760px) {
+  .hero-photo {
+    min-height: 540px;
+  }
+  .hero-photo .hero-bg {
+    object-position: 45% 30%;
+  }
+  .hero-photo::after {
+    background: linear-gradient(180deg, rgba(8, 36, 60, 0.55) 0%, rgba(8, 36, 60, 0.82) 45%, rgba(8, 36, 60, 0.9) 100%);
   }
 }
 
