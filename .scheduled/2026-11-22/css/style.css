@@ -535,7 +535,7 @@ address {
   height: 100%;
   max-width: none;
   object-fit: cover;
-  object-position: 60% 40%;
+  object-position: 60% 75%;
 }
 .hero-photo::after {
   content: "";
@@ -543,20 +543,50 @@ address {
   inset: 0;
   background: linear-gradient(90deg, rgba(8, 36, 60, 0.86) 0%, rgba(8, 36, 60, 0.62) 50%, rgba(8, 36, 60, 0.2) 100%);
 }
+/* PC（広い画面）：写真は右半分に見せ、文字は左の青い地に置く */
+@media (min-width: 1001px) {
+  .hero-photo {
+    background: #0068B3;
+  }
+  .hero-photo .hero-bg {
+    left: auto;
+    width: 52%;
+    object-position: 28% 50%;
+  }
+  .hero-photo::after {
+    background: linear-gradient(90deg, #0068B3 0%, #0068B3 48%, rgba(0, 104, 179, 0) 58%);
+  }
+  .hero-photo .hero-inner > * {
+    max-width: 630px;
+  }
+  .hero-photo .hero-title {
+    font-size: 34px;
+  }
+}
 .hero-photo .hero-inner {
   position: relative;
   z-index: 1;
   width: 100%;
 }
+/* スマホ：写真は文字の上に重ねず、上に帯として見せる */
 @media (max-width: 760px) {
   .hero-photo {
-    min-height: 540px;
+    display: block;
+    min-height: 0;
+    padding: 0 0 32px;
+    background: #0068B3;
   }
   .hero-photo .hero-bg {
-    object-position: 45% 30%;
+    position: static;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-position: 35% 50%;
   }
   .hero-photo::after {
-    background: linear-gradient(180deg, rgba(8, 36, 60, 0.55) 0%, rgba(8, 36, 60, 0.82) 45%, rgba(8, 36, 60, 0.9) 100%);
+    content: none;
+  }
+  .hero-photo .hero-inner {
+    padding: 24px 16px 0;
   }
 }
 
